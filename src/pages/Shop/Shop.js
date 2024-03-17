@@ -7,13 +7,13 @@ import Product from '~/layouts/components/Product/Product';
 import Crumb from '~/components/Crumb/Crumb';
 import { HttpGet } from '../API/useAuth/auth.api';
 import { Pagination } from 'antd';
-
+import { useLocation } from 'react-router-dom';
 const cx = classNames.bind(style);
 
 function Shop() {
     // Pagination
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [totalPage, setTotalPage] = useState(1);
     const [totalItem, settotalItem] = useState(1);
 
@@ -44,9 +44,19 @@ function Shop() {
         }
     };
 
+    const location = useLocation();
+    const data = location.state ? location.state.data : null;
     useEffect(() => {
-        callApi();
-    }, [page, pageSize]);
+        console.log('data1',data)
+        if(data){
+            setProductTag(data.products);
+            setTotalPage(data.totalPage)
+            settotalItem(data.totalitem)
+        }else{
+            callApi();
+        }
+        console.log("cjheck",productTag)
+    }, [page, pageSize,data]);
     const handPagination = (current, pageSize) => {
         setPage(current);
         setPageSize(pageSize)
@@ -54,39 +64,20 @@ function Shop() {
     // Sort Product
     const [sort, setSort] = useState();
     const sortProduct = (Data) => {
+        console.log('so',sort)
         if (sort === 'Ascending') {
             return Data.sort((a, b) => {
-                if (
-                    (a.sale === '0' ? a.price : (a.price * a.sale) / 100) <
-                    (b.sale === '0' ? b.price : (b.price * b.sale) / 100)
-                ) {
-                    return -1;
-                }
-                if (
-                    (a.sale === '0' ? a.price : (a.price * a.sale) / 100) >
-                    (b.sale === '0' ? b.price : (b.price * b.sale) / 100)
-                ) {
-                    return 1;
-                }
-                return 0;
+               if(a.price<b.price)return -1
+               if(a.price>b.price)return 1
+               if(a.price=b.price)return 0
             });
         }
         if (sort === 'Descending') {
             return Data.sort((a, b) => {
-                if (
-                    (a.sale === '0' ? a.price : (a.price * a.sale) / 100) <
-                    (b.sale === '0' ? b.price : (b.price * b.sale) / 100)
-                ) {
-                    return 1;
-                }
-                if (
-                    (a.sale === '0' ? a.price : (a.price * a.sale) / 100) >
-                    (b.sale === '0' ? b.price : (b.price * b.sale) / 100)
-                ) {
-                    return -1;
-                }
-                return 0;
-            });
+                if(a.price>b.price)return -1
+                if(a.price<b.price)return 1
+                if(a.price=b.price)return 0
+             });
         }
 
         if (sort === 'None') {
@@ -107,12 +98,12 @@ function Shop() {
             return 0;
         });
     }
-
+    console.log("product",productTag)
     return (
         <div className={cx('wrapper')}>
             <Crumb title="Shop" />
             <div className={cx('content')}>
-                <div className={cx('filter')}>
+                {/* <div className={cx('filter')}>
                     <Filter
                         isCategory
                         isPrice
@@ -121,16 +112,16 @@ function Shop() {
                         setPrice={setPrice}
                         setTag={setTag}
                     />
-                </div>
+                </div> */}
                 {productTag && (
                     <div className={cx('right-shop')}>
-                        {categories !== '' && price !== '' && color !== '' && size !== '' && tag !== '' && (
+                        {/* {categories !== '' && price !== '' && color !== '' && size !== '' && tag !== '' && (
                             <div className={cx('list-active')}>
                                 {categories !== '' && <p>Category : {categories} /</p>}
                                 {price !== '' && <p>Price : {price} /</p>}
                                 {tag !== '' && <p>Tag : {tag} /</p>}
                             </div>
-                        )}
+                        )} */}
                         <div className={cx('sort')}>
                             <select className={cx('sorting')} onChange={(e) => setSort(e.target.value)}>
                                 <option value="None">Default Sorting</option>

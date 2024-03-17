@@ -44,7 +44,7 @@ function Product({ data }) {
                             <span className={cx('product-type')}>{data.type}</span>
                             <span className={cx('product-name')}>{data.productName}</span>
                             <div className={cx('product-price')}>
-                                <span>{data.price}</span>
+                                <span>{data.price} đ</span>
                             </div>
                         </div>
                     </div>

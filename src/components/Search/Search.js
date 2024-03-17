@@ -4,7 +4,7 @@ import axios from 'axios';
 import HeadlessTippy from '@tippyjs/react/headless';
 import 'tippy.js/dist/tippy.css';
 import * as searchServices from '~/services/searchServices';
-
+import { useNavigate  } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import style from './Search.module.scss';
 
@@ -12,6 +12,7 @@ import { MdOutlineExpandMore } from 'react-icons/md';
 import { BiSearch, BiSearchAlt } from 'react-icons/bi';
 
 import ProductItem from '../ProductItem/ProductItem';
+import { HttpGet } from '~/pages/API/useAuth/auth.api';
 
 const cx = classNames.bind(style);
 
@@ -22,17 +23,17 @@ function Search() {
     const inputRef = useRef();
 
     // Call API
-    const callApi = async () => {
-        const response = await axios({
-            method: 'get',
-            url: `https://6556cd15bd4bcef8b611a0fc.mockapi.io/api/clothes/clothes`,
-            type: 'json',
-        });
+    // const callApi = async () => {
+    //     const response = await axios({
+    //         method: 'get',
+    //         url: `https://6556cd15bd4bcef8b611a0fc.mockapi.io/api/clothes/clothes`,
+    //         type: 'json',
+    //     });
 
-        if (response.status === 200) {
-            setSearchResult(response.data.filter((d) => d.name.includes(searchValue)));
-        }
-    };
+    //     if (response.status === 200) {
+    //         setSearchResult(response.data.filter((d) => d.name.includes(searchValue)));
+    //     }
+    // };
 
     const handleChange = (e) => {
         const searchValue = e.target.value;
@@ -45,15 +46,29 @@ function Search() {
     const handleHideResult = () => {
         setShowResult(false);
     };
-
-    useEffect(() => {
-        if (searchValue !== '') {
-            callApi();
-        } else {
-            setShowResult(false);
-            setSearchResult([]);
+    const navigate = useNavigate();
+    const HandleSearch = async ()=>{
+        console.log("searchy",searchValue)
+        if(searchValue){
+            const rs = await HttpGet(`/product/search?name=${searchValue}`)
+            if(rs.status == 200){
+                navigate('/shop', { state: { data: rs.data  } });
+            // setSearchResult()
+                console.log("rs",rs.data.products)
+            }
+        }else{
+            navigate('/shop')
         }
-    }, [searchValue]);
+
+    }
+    // useEffect(() => {
+    //     if (searchValue !== '') {
+    //         callApi();
+    //     } else {
+    //         setShowResult(false);
+    //         setSearchResult([]);
+    //     }
+    // }, [searchValue]);
 
     return (
         <div className={cx('wrapper')}>
@@ -86,7 +101,7 @@ function Search() {
                                 onChange={handleChange}
                                 onFocus={() => setShowResult(true)}
                             />
-                            <button type="button">
+                            <button type="button" onClick={HandleSearch}>
                                 <BiSearch className={cx('btn-search')} />
                             </button>
                         </form>

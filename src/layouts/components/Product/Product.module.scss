@@ -12,6 +12,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    margin: 6px 0;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .content {
@@ -175,10 +177,11 @@
     font-weight: 700;
 
     span {
+        margin-top: 4px;
         font-size: 14px;
-        font-weight: 400;
-        color: #b2b2b2;
-        text-decoration: line-through;
+        font-weight: 700;
+        color: #920101;
+        // text-decoration: line-through;
         margin-left: 3%;
     }
 }

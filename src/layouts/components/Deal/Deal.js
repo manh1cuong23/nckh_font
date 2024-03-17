@@ -13,16 +13,15 @@ function Deal() {
                 <div className={cx('content')}>
                     <h1 className={cx('content-title')}>Deal Of The Weak</h1>
                     <p className={cx('content-intro')}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do ipsum dolor sit amet,
-                        consectetur adipisicing elit
+                    The restaurant's fast food dishes are on sale
                     </p>
                     <span className={cx('content-price')}>
-                        $35 / <p className={cx('content-product')}>&nbsp;HanBag</p>
+                        $12 / <p className={cx('content-product')}>&nbsp;Spicy noodles</p>
                     </span>
                     <div className={cx('content-time')}>
                         <div>
-                            <span>27</span>
-                            <span>DAYS</span>
+                            <span>1</span>
+                            <span>DAY</span>
                         </div>
                         <div>
                             <span>02</span>
@@ -37,7 +36,7 @@ function Deal() {
                             <span>SECS</span>
                         </div>
                     </div>
-                    <button className={cx('content-btn')}>SHOP NOW</button>
+                    <button className={cx('content-btn')}>ORDER NOW</button>
                 </div>
             </div>
         </div>

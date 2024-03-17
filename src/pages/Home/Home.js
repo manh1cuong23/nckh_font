@@ -20,8 +20,7 @@ function Home() {
             <BannerSection />
             <Product1 />
             <Deal />
-            <Product2 />
-            <SampleShow />
+            
             <HomeBlog />
         </div>
     );

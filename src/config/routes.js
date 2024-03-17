@@ -14,7 +14,7 @@ const routes = {
     collection: '/collection',
     favourite: '/favourite',
     ForgetPass: '/ForgetPass',
-
+    CreatePro:'/CreatePro',
 
 
     //admin

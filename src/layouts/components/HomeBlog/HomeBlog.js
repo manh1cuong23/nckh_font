@@ -22,28 +22,7 @@ function Product() {
                     <div>From The Blog</div>
                 </div>
 
-                <div className={cx('blog-wrapper')}>
-                    {blog.slice(0, 3).map((d, i) => (
-                        <Link to={`/blogDetail/${d.id}`} key={i} className={cx('single-latest-blog')}>
-                            <img src={d.img} alt="blog1" />
-                            <div className={cx('latest-text')}>
-                                <div className={cx('tag-list')}>
-                                    <div className={cx('tag-item')}>
-                                        <RiCalendarEventFill className={cx('calendar-icon')}></RiCalendarEventFill>
-                                        <div>{d.date}</div>
-                                    </div>
-                                    <div className={cx('tag-item')}>
-                                        <FaRegComment className={cx('comment-icon')}></FaRegComment>5
-                                    </div>
-                                </div>
-                                <div>
-                                    <h4>{d.title}</h4>
-                                </div>
-                                <p>{d.content_main} </p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+               
 
                 <div className={cx('benefit-items')}>
                     <div className={cx('single-benefit')}>

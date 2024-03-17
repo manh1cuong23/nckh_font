@@ -58,7 +58,15 @@
     flex-direction: column;
     margin-bottom: 25px;
 }
-
+.payment-total{
+    list-style: none;
+    font-weight: 700;
+    color:#d85d5c ;
+    border: none ;
+    font-size: 20px ;
+    display: flex;
+    justify-content: space-between;
+}
 .form-label {
     color: #252525;
     font-size: 16px;
@@ -101,7 +109,12 @@
 
 .order-table {
     list-style: none;
-    margin-bottom: 64px;
+    margin-bottom: 14px;
+    max-height: 400px;
+    min-height: 100px;
+    overflow: scroll;
+    padding:0;
+
 }
 
 .order-table li:first-child {
@@ -127,6 +140,7 @@
     text-transform: capitalize;
 
     span {
+        width: 25%;
         font-weight: 700;
     }
 }
@@ -212,6 +226,7 @@
     border: 1px solid #e7ab3c;
     border-color: #000000;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 
@@ -232,5 +247,29 @@
     .form-left,
     .form-right {
         width: 100%;
+    }
+}
+.order-table1{
+    width: 100%;
+    font-size: 16px;
+    height: 200px;
+    box-sizing: border-box;
+    overflow: auto;
+    padding:0;
+    th{
+        font-size: 18px;
+        color:#6d6c6c;
+    }
+    tr{
+        height: 60px;
+    }
+    td{
+        padding-bottom:20px;
+        color:#979797;
+        line-height: 30px;
+        width: 20%;
+    }
+    td:first-child{
+        width:40% ;
     }
 }

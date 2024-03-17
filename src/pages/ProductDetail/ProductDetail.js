@@ -14,7 +14,10 @@ import { AiFillStar, AiOutlineQuestionCircle, AiOutlineFileProtect } from 'react
 import { FaShippingFast } from 'react-icons/fa';
 import { BsFillCartPlusFill } from 'react-icons/bs';
 import { TbArrowBackUp } from 'react-icons/tb';
-import { HttpGet } from '../API/useAuth/auth.api';
+import { HttpGet, HttpPost } from '../API/useAuth/auth.api';
+import PurePanel from 'antd/es/tooltip/PurePanel';
+import { useCallback } from 'react';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(style);
 
@@ -49,18 +52,34 @@ function ProductDetail() {
     const handleQuantity = (e) => {
         setProductQuantity(e.target.value);
     };
-
-    const handleIncrease = () => {
+    const handleIncrease = useCallback(() => {
         setProductQuantity(productQuantity + 1);
-    };
+      }, [productQuantity]);
+   
+    const handleAddToCard = async()=>{
+        console.log("check",productDetail)
+        const data = {productId:productDetail._id,quantity:productQuantity}
+        try{
+            const res = await HttpPost('/cart/create', data);
+            if(res.status ==200){
+                toast.success("Thêm sản phẩm vào giỏ hàng thành công")
+            }else{
+                toast.error("Thêm sản phẩm vào giỏ hàng thất bại")
 
-    const handleReduce = () => {
+            }
+        }catch(err){
+            console.log(err)
+        }
+       
+    }
+    const handleReduce = useCallback(() => {
         if (productQuantity === 1) {
             setProductQuantity(1);
         } else {
             setProductQuantity(productQuantity - 1);
         }
-    };
+      }, [productQuantity]);
+   
 
     // Lay input value & day sang checkout
     const navigate = useNavigate();
@@ -161,7 +180,7 @@ function ProductDetail() {
                                 </div>
                             </div>
                             <div className={cx('purchase')}>
-                                <div className={cx('add')}>
+                                <div className={cx('add')} onClick={handleAddToCard}>
                                     <BsFillCartPlusFill />
                                     <span>Add To Cart</span>
                                 </div>

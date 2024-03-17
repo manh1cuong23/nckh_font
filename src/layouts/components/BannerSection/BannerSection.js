@@ -15,19 +15,19 @@ function PartnerLogo() {
                 <div className={cx("single-banner")}>
                     <img src={banner1} alt="banner-1" />
                     <div className={cx("inner-text")}>
-                        <h4>Men’s</h4>
+                        <h4>Fast food</h4>
                     </div>
                 </div>
                 <div className={cx("single-banner")}>
                     <img src={banner2} alt="banner-2" />
                     <div className={cx("inner-text")}>
-                        <h4>Women’s</h4>
+                        <h4>Noodle</h4>
                     </div>
                 </div>
                 <div className={cx("single-banner")}>
                     <img src={banner3} alt="banner-3" />
                     <div className={cx("inner-text")}>
-                        <h4>Kid’s</h4>
+                        <h4>Rice</h4>
                     </div>
                 </div>
             </div>

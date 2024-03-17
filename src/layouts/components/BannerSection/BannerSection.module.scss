@@ -19,6 +19,10 @@
 .single-banner {
     width: 32%;
     position: relative;
+    img{
+        height:260px;
+
+    }
 }
 
 .single-banner::before {

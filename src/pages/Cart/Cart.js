@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import ClassNames from 'classnames';
@@ -8,25 +8,85 @@ import Crumb from '~/components/Crumb/Crumb';
 
 import img1 from '~/assets/imgs/product-1.jpg';
 import { TfiClose } from 'react-icons/tfi';
+import { HttpDelete, HttpGet, HttpPost } from '../API/useAuth/auth.api';
+import { toast } from 'react-toastify';
 
 const cx = classNames.bind(style);
 
 function Cart({ className }) {
-    const [product, setProduct] = useState();
-    const [productQuantity, setProductQuantity] = useState(1);
-
-    const handleIncrease = () => {
-        setProductQuantity(productQuantity + 1);
+    const [product, setProduct] = useState([]);
+    const [total,setTotal] = useState(0)
+    const [productQuantity, setProductQuantity] = useState({
+        name:"",
+        quantity:1
+    });
+    useEffect(()=>{
+        let totalSum = 0;
+        if(product){
+            product.forEach((item)=>{
+                console.log("itemhi",item)
+                totalSum +=item.productId.price * item.quantity;
+            })
+            setTotal(totalSum);
+        } 
+    },[product])
+    const handleIncrease = (index) => {
+        const check=  product.map((item,i)=>{
+           
+            if(i==index){
+                item.productId.productName = "test"
+                item.quantity =item.quantity +1;
+            }
+           console.log("helo",item.quantity)
+           return item
+        })
+        setProduct(check);
     };
 
-    const handleReduce = () => {
-        if (productQuantity === 1) {
-            setProductQuantity(1);
-        } else {
-            setProductQuantity(productQuantity - 1);
+    const handleReduce = (index) => {
+        const check=  product.map((item,i)=>{
+           
+            if(i==index){
+                console.log("chec",typeof item.quantity)
+                if(item.quantity>1){
+                    console.log('check quan',item.quantity)
+                    item.quantity =item.quantity -1;
+                }else{
+                    return item;
+                }
+            }
+           console.log("helo",item.quantity)
+           return item
+        })
+        setProduct(check);
+    };
+    const callApi = async()=>{
+        console.log("call api")
+        const rs = await HttpGet(`/cart/get`)
+        
+        if (rs.status === 200) {
+            setProduct(rs.data);
+
         }
-    };
+    }
+    useEffect(() => {
+        callApi();
+    }, []);
+   
+    console.log('rs', product)
+    
+    const HandleClickDelete = async(idPro)=>{
+        console.log("co chay day ko")
+        console.log("acc",idPro)
+        const rs = await HttpDelete(`/cart/delete?id=${idPro}`)
+        if(rs.status==200){
+            toast.success("Xoa san pham ra khoi gio hang thanh cong");
+            callApi();
+        }else{
+            toast.error("Xoa san pham ra khoi gio hang thất bại")
 
+        }
+    }
     return (
         <div className={cx('wrapper')}>
             <Crumb title="Shopping Cart" />
@@ -47,68 +107,39 @@ function Cart({ className }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                               {product ? product.map((item,index)=>{
+                                console.log("sao may ko vao day",item.quantity)
+                                return(<tr  key={index}>
                                     <td className={cx('cart-pic')}>
-                                        <img src={img1} alt="" />
+                                        <img src={item.productId.images[0].imgUrl} alt="" />
                                     </td>
                                     <td className={cx('cart-title')}>
-                                        <h5>Pure Pineapple</h5>
+                                        <h5>{item.productId.productName}</h5>
                                     </td>
-                                    <td className={cx('p-price')}>$60.00</td>
+                                    <td className={cx('p-price')}>{item.productId.price}đ</td>
                                     <td className={cx('qua-col')}>
                                         <div className={cx('quantity')}>
                                             <div className={cx('pro-qty')}>
-                                                <span className={cx('qtybtn')} onClick={(e) => handleReduce(e)}>
+                                                <span className={cx('qtybtn')} onClick={() => handleReduce(index)}>
                                                     -
                                                 </span>
                                                 <input
                                                     type="text"
                                                     readOnly={true}
-                                                    value={productQuantity}
-                                                    onChange={(e) => setProductQuantity(e.target.value)}
+                                                    value={item.quantity}
                                                 />
-                                                <span className={cx('qtybtn')} onClick={(e) => handleIncrease(e)}>
+                                                <span className={cx('qtybtn')} onClick={() => handleIncrease(index)}>
                                                     +
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className={cx('total-price')}>$60.00</td>
-                                    <td className={cx('close-td')}>
-                                        <TfiClose className={cx('delete')} />
+                                    <td className={cx('total-price')}>{item.quantity * item.productId.price}đ</td>
+                                    <td className={cx('close-td')} >
+                                        <TfiClose className={cx('delete')} onClick={()=>HandleClickDelete(item._id)}/>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td className={cx('cart-pic')}>
-                                        <img src={img1} alt="" />
-                                    </td>
-                                    <td className={cx('cart-title')}>
-                                        <h5>Pure Pineapple</h5>
-                                    </td>
-                                    <td className={cx('p-price')}>$60.00</td>
-                                    <td className={cx('qua-col')}>
-                                        <div className={cx('quantity')}>
-                                            <div className={cx('pro-qty')}>
-                                                <span className={cx('qtybtn')} onClick={(e) => handleReduce(e)}>
-                                                    -
-                                                </span>
-                                                <input
-                                                    type="text"
-                                                    readOnly={true}
-                                                    value={productQuantity}
-                                                    onChange={(e) => setProductQuantity(e.target.value)}
-                                                />
-                                                <span className={cx('qtybtn')} onClick={(e) => handleIncrease(e)}>
-                                                    +
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className={cx('total-price')}>$60.00</td>
-                                    <td className={cx('close-td')}>
-                                        <TfiClose className={cx('delete')} />
-                                    </td>
-                                </tr>
+                                </tr>)
+                               }) :""  }
                             </tbody>
                         </table>
                     </div>
@@ -135,14 +166,12 @@ function Cart({ className }) {
 
                         <div className={cx('proceed-checkout')}>
                             <ul>
-                                <li className={cx('subtotal')}>
-                                    Subtotal <span>$240.00</span>
-                                </li>
+                              
                                 <li className={cx('cart-total')}>
-                                    Total <span>$240.00</span>
+                                    Total <span>{total} vnd</span>
                                 </li>
                             </ul>
-                            <Link to="/checkout" className={cx('proceed-btn')}>
+                            <Link to="/checkout" className={cx('proceed-btn')} state={product}>
                                 PROCEED TO CHECK OUT
                             </Link>
                         </div>

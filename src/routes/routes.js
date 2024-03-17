@@ -17,6 +17,7 @@ import ForgetPass from '~/pages/ForgetPass/ForgetPass';
 import mainDashboard from '~/pages/mainDashboard/mainDashboard';
 import DashboardOverview from '~/pages/mainDashboard/pages/dashboard/DashboardOverview';
 import Manaproduct from '~/pages/mainDashboard/pages/Manaproduct/Manaproduct';
+import CreatePro from '~/pages/CreateProfile/CreatePro';
 const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.shop, component: Shop },
@@ -32,6 +33,7 @@ const publicRoutes = [
     { path: config.routes.profile, component: Profile },
     { path: config.routes.favourite, component: Favourite },
     { path: config.routes.ForgetPass, component: ForgetPass },
+    { path: config.routes.CreatePro, component: CreatePro },
 ];
 
 const privateRoutes = [

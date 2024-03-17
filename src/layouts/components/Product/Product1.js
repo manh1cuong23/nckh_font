@@ -44,56 +44,18 @@ function Product1(props) {
             <div className={cx('product')}>
                 <div className={cx('product-left')}>
                     <img src={img1} alt="women" />
-                    <div className={cx('intro')}>Women's</div>
+                    <div className={cx('intro')}>Restaurant</div>
                     <span className={cx('more')}>Discover More</span>
                 </div>
                 <div className={cx('product-right')}>
-                    <div className={cx('right-option')}>
-                        {listProduct.map((d, i) => (
-                            <span
-                                className={cx('btn', productActive === i ? 'active' : null)}
-                                onClick={() => {
-                                    setProductActive(i);
-                                    setProduct(d);
-                                }}
-                                key={i}
-                            >
-                                {d}
-                            </span>
-                        ))}
-                    </div>
-                    <div className={cx('right-content')}>
-                        <Swiper
-                            slidesPerView={3}
-                            spaceBetween={30}
-                            navigation={true}
-                            pagination={{
-                                clickable: true,
-                            }}
-                            autoplay={{ delay: 5000, disableOnInteraction: true }}
-                            modules={[Navigation, Autoplay]}
-                            className="mySwiper"
-                            breakpoints={{
-                                0: {
-                                    slidesPerView: 1,
-                                },
-                                600: {
-                                    slidesPerView: 2,
-                                },
-                                865: {
-                                    slidesPerView: 3,
-                                },
-                            }}
-                        >
-                            {productTag
-                                .filter((t) => t.type === product)
-                                .map((d, i) => (
-                                    <SwiperSlide key={i}>
-                                        <SliderProduct data={d} />
-                                    </SwiperSlide>
-                                ))}
-                        </Swiper>
-                    </div>
+                    <h1>TAKI RESTAURANT</h1>
+                    <ul>
+                        <li>Chào mừng quý khách đến với nhà hàng sang trọng của chúng tôi, nơi bạn có thể tận hưởng những món ăn ngon đẳng cấp được chế biến từ những nguyên liệu tươi ngon nhất.</li>
+                        <li>Với không gian lịch lãm và dịch vụ chuyên nghiệp, nhà hàng của chúng tôi là điểm đến lý tưởng cho những bữa tiệc hoặc buổi hẹn quan trọng.</li>
+                        <li>Đội ngũ đầu bếp tài năng của chúng tôi luôn tạo ra những món ăn độc đáo và phong phú, đáp ứng mọi sở thích ẩm thực của quý khách.</li>
+                        <li>Với menu đa dạng từ các món ăn Âu, Á đến hải sản tươi sống, chúng tôi cam kết mang đến trải nghiệm ẩm thực tuyệt vời nhất cho mọi thực khách.</li>
+                        <li>Hãy đến và trải nghiệm không gian ấm áp, sang trọng cùng với hương vị tuyệt vời tại nhà hàng của chúng tôi - nơi thăng hoa mọi giác quan của bạn.</li>
+                    </ul>
                 </div>
             </div>
         </div>

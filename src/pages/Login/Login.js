@@ -24,6 +24,7 @@ function Login() {
     const navigate = useNavigate(); 
 
     const handleLogin = async (data) => {
+        console.log("vao day")
         try {
             const res = await HttpPost('/auth/sign-in', data);
             if(res.data.statuscode === 200) {
@@ -50,28 +51,24 @@ function Login() {
                 <h2 className={cx('form-title')}>Login</h2>
                 <div className={cx('form-group')}>
                     <label htmlFor="username" className={cx('form-label')}>
-                        Email address *
+                        Username
                     </label>
                     <input
                         type="text"
                         className={cx('form-control')}
                         id="username"
                         // value={email}
-                        placeholder="Example:abc@gmail.com"
+                        placeholder="Example:Manhcuong"
                         autoComplete="new-password"
                         {...register('username', {
                             required: true,
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            },
+                           
                         })}
                     />
                     {errors.username && errors.username.type === 'required' && (
-                        <span className={cx('error-message')}>Email cannot be empty !</span>
+                        <span className={cx('error-message')}>Username cannot be empty !</span>
                     )}
-                    {errors.username && errors.username.type === 'pattern' && (
-                        <span className={cx('error-message')}>Invalid email !</span>
-                    )}
+                 
                 </div>
                 <div className={cx('form-group')}>
                     <label htmlFor="password" className={cx('form-label')}>
