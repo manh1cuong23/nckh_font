@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import classNames from 'classnames/bind';
@@ -14,7 +14,7 @@ import { AiFillStar, AiOutlineQuestionCircle, AiOutlineFileProtect } from 'react
 import { FaShippingFast } from 'react-icons/fa';
 import { BsFillCartPlusFill } from 'react-icons/bs';
 import { TbArrowBackUp } from 'react-icons/tb';
-import { HttpGet, HttpPost } from '../API/useAuth/auth.api';
+import { HttpGet, HttpPost } from '../API/useAuth/auth.api.js';
 import PurePanel from 'antd/es/tooltip/PurePanel';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
@@ -26,7 +26,9 @@ function ProductDetail() {
     const param = useParams();
     const [productDetail, setProductDetail] = useState({});
     const [product, setProduct] = useState([]);
+    const check = sessionStorage.getItem("accesstoken")
 
+    console.log("cjheclk",check)
     const callApi = async () => {
         
         const rs = await HttpGet(`/product/detail?id=${param.id}`)
@@ -93,7 +95,7 @@ function ProductDetail() {
     };
 
     console.log(productQuantity);
-
+    console.log('check acc',sessionStorage.getItem("accesstoken"))
     return (
         <div className={cx('wrapper')}>
             {productDetail && (
@@ -103,7 +105,7 @@ function ProductDetail() {
                         <div className={cx('left-header')}>
                             <div className={cx('imgs')}>
                                 <div className={cx('img-main')}>
-                                    <img src={productDetail.images ? productDetail.images[0].imgUrl : img } alt="img-main" />
+                                    <img src={productDetail.images ? productDetail.images[0]?.imgUrl : img } alt="img-main" />
                                 </div>
                                 <div className={cx('img-extra')}>
                                     {/* {productDetail.images && productDetail.images.forEach(element => {

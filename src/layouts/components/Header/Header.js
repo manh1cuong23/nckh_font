@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 
@@ -13,10 +13,29 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import style from './Header.module.scss';
 import Search from '~/components/Search/Search';
 import img1 from '~/assets/imgs/women-4.jpg';
+import useAuthStore from '~/hooks/useAuthStore';
+import { HttpGet } from '~/pages/API/useAuth/auth.api';
+
 
 const cx = classNames.bind(style);
 
 function Header() {
+    const user = useAuthStore((state) => state.user);
+    const [cartCount,setCartCount] = useState(0)
+    console.log('user',user)
+    const callApi=async ()=>{
+        const rs = await HttpGet('/cart/getCount');
+        console.log('rsvãc',rs)
+        if(rs){
+        setCartCount(rs.data)
+        }
+    }
+    useEffect(()=>{
+        callApi()
+    },[cartCount])
+    const handleLogout = ()=>{
+        sessionStorage.removeItem('accesstoken');
+    }
     return (
         <header className={cx('wrapper')}>
             <div className={cx('header-top')}>
@@ -56,9 +75,14 @@ function Header() {
                        
                         <div className={cx('login')}>
                             <FaUser />
-                            <span>
+                            {user? <span>
                                 <Link to="/login">Login</Link>
-                            </span>
+                            </span>:
+                            <span>
+                            <Link onClick={handleLogout} to="/login">logout</Link>
+                        </span>
+                            }
+                            
                         </div>
                         <div className={cx('avatar--user')}>
                             <Link to="/profile">
@@ -87,7 +111,7 @@ function Header() {
                         <Link to="/cart" className={cx('cart-icon')}>
                             <BsClipboardPlus />
                             <span className={cx('cart-number')}>
-                                <span>3</span>
+                                <span>{cartCount}</span>
                             </span>
                         </Link>
                         <div className={cx('price')}>$150.00</div>

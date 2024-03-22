@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import API from '~/network/API';
+import { HttpGet } from '~/pages/API/useAuth/auth.api';
 
 const useAuthStore = create(
     devtools(
@@ -17,12 +17,14 @@ const useAuthStore = create(
                 set((state) => {
                     state.user = null;
                 });
-                localStorage.removeItem('accessToken');
+                sessionStorage.removeItem('authToken');
             },
             fetchUser: async () => {
-                if (!localStorage.getItem('accessToken')) {
+                console.log('da vao fetch user')
+                if (!sessionStorage.getItem('authToken')) {
                     set((state) => {
                         state.isFetchedUser = true;
+                        
                     });
                     return;
                 }
@@ -32,12 +34,14 @@ const useAuthStore = create(
                 });
 
                 try {
-                    const response = await API.get('/v1/auth/me');
+                    const response =  await HttpGet(`/auth/me`);
+                    
                     set((state) => {
-                        state.user = response.data.data;
+                        state.user = response;
+                        console.log('chek usse iio auth',response)
                     });
                 } catch (e) {
-                    localStorage.removeItem('accessToken');
+                    sessionStorage.removeItem('authToken');
                 } finally {
                     set((state) => {
                         state.isLoading = false;

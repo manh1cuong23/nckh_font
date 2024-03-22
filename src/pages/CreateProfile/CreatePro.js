@@ -21,35 +21,49 @@ function CreatePro() {
     // console.log(location);
     // console.log(inputValue);
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm();
     const [date, setDate] = useState(); 
     const param = useParams();
 
     const [productCheckOut, setProductCheckOut] = useState([]);
     // const [cartCheckOut, setCartCheckOut] = useState([]);
     const [profile,setProfile] = useState({})
-
+    const location = useLocation();
+    let { state } = useLocation()
+   
+    console.log('check data',state)
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            note: state ? state?.note : "",
+            fullName: state ? state?.fullName : "",
+            phoneNumber:state ? state?.phoneNumber : "",
+            address:state ? state?.address : ""
+          },
+    });
     const callApi = async () => {
         const rs = await HttpGet(`/profile/getProfileClient`);
         if(rs.status == 200){
             setProfile(rs.data);
+            setDate(rs.data.birthday)
         }
     };
 
     useEffect(() => {
         callApi();
+        
     }, []);
-
+    console.log('chekcooo',profile)
+   
      const onSubmitPro = async(data)=>{
         if(!date){
             toast.warning("Please select birthday")
         }
         const newData = {...data,birthday:date}
+        console.log('check new data',newData)
         const rs = await HttpPut(`/profile/updateProfile`,newData)
         if(rs.status==200){
             toast.success("update profile success")
@@ -80,13 +94,12 @@ function CreatePro() {
                                 <input
                                     type="text"
                                     className={cx('form-control')}
-                                    value={profile.fullName}
-                                    {...register('FullName', {
+                                    {...register('fullName', {
                                         required: true,
                                     })}
                                 />
-                                {errors.FullName && errors.FullName.type === 'required' && (
-                                    <span className={cx('error-message')}>FullName cannot be empty !</span>
+                                {errors.fullName && errors.fullName.type === 'required' && (
+                                    <span className={cx('error-message')}>fullName cannot be empty !</span>
                                 )}
                             </div>
                           
@@ -97,56 +110,53 @@ function CreatePro() {
                                 <input
                                     type="text"
                                     className={cx('form-control')}
-                                    value={profile.phoneNumber}
-                                    {...register('PhoneNumber', {
+                                    {...register('phoneNumber', {
                                         required: true,
                                         maxLength: 15,
                                         minLength: 9,
                                         valueAsNumber: false,
                                     })}
                                 />
-                                {errors.PhoneNumber && errors.PhoneNumber.type === 'required' && (
+                                {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
                                     <span className={cx('error-message')}>Phone number cannot be empty !</span>
                                 )}
-                                {errors.PhoneNumber && errors.PhoneNumber.type === 'maxLength' && (
+                                {errors.phoneNumber && errors.phoneNumber.type === 'maxLength' && (
                                     <span className={cx('error-message')}>Invalid phone number</span>
                                 )}
-                                {errors.PhoneNumber && errors.PhoneNumber.type === 'minLength' && (
+                                {errors.phoneNumber && errors.phoneNumber.type === 'minLength' && (
                                     <span className={cx('error-message')}>Invalid phone number</span>
                                 )}
                             </div>
                           
                             <div className={cx('form-group')}>
                                 <label htmlFor="address" className={cx('form-label')} >
-                                    Address <span>*</span>
+                                    address <span>*</span>
                                 </label>
                                 <input
                                     type="text"
                                     className={cx('form-control')}
-                                    value={profile.address}
-                                    {...register('Address', {
+                                    {...register('address', {
                                         required: true,
                                     })}
                                 />
-                                {errors.Address && errors.Address.type === 'required' && (
-                                    <span className={cx('error-message')}>Address cannot be empty !</span>
+                                {errors.address && errors.address.type === 'required' && (
+                                    <span className={cx('error-message')}>address cannot be empty !</span>
                                 )}
                             </div>
                             <div className={cx('form-group')}>
-                                <label htmlFor="Note" className={cx('form-label')}>
+                                <label htmlFor="note" className={cx('form-label')}>
                                     Birthday
                                 </label>
                                 <div className={cx('form-date2')}>
-                                    <DatePicker className={cx('form-date')}  selected={profile.birthday} onChange={(date) => setDate(date)} style={{height:'300px'}}/>
+                                    <DatePicker className={cx('form-date')}  selected={date } onChange={(date) => setDate(date)} style={{height:'300px'}}/>
                                 </div>
                             </div>
                             <div className={cx('form-group')}>
-                                <label htmlFor="Note" className={cx('form-label')}>
-                                    Note
+                                <label htmlFor="note" className={cx('form-label')}>
+                                    note
                                 </label>
                                 <textarea type="text" className={cx('form-note')}
-                                value={profile.note}
-                                 {...register('Note', {
+                                 {...register('note', {
                                     required: false,
                                 })} 
                                 />

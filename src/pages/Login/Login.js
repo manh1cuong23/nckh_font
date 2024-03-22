@@ -22,14 +22,17 @@ function Login() {
         formState: { errors },
     } = useForm();
     const navigate = useNavigate(); 
-
+    const axiosInstance = axios.create();
     const handleLogin = async (data) => {
         console.log("vao day")
         try {
             const res = await HttpPost('/auth/sign-in', data);
             if(res.data.statuscode === 200) {
                 const token = res.data.data.accesstoken;
-                sessionStorage.setItem("authToken", token)
+                sessionStorage.setItem("accesstoken", token)
+                
+                const check = sessionStorage.getItem("accesstoken")
+                console.log("cjheclk",check)
                 toast.success(res.data.message)
                 if(res.data.data.roleName === "Admin") {
                     navigate('/dashboard')

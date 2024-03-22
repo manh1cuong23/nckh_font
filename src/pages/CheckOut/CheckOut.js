@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import classNames from 'classnames/bind';
 import style from './CheckOut.module.scss';
 import Crumb from '~/components/Crumb/Crumb';
-import { HttpGet, HttpPost } from '../API/useAuth/auth.api';
+import { HttpGet, HttpPost } from '../API/useAuth/auth.api.js';
 import { toast } from 'react-toastify';
 
 const cx = classNames.bind(style);
@@ -61,8 +61,9 @@ function CheckOut() {
     const handleProcess = async()=>{
         if(productCheckOut){
             let data = productCheckOut.map((item)=>{
-                return {userId:item.userId,productId:item.productId._id,quantity:item.quantity,price:item.productId.price}
+                return {userId:item.userId,productId:item.productId._id,quantity:item.quantity,price:item.productId.price,idAdmin:item.productId.userId}
             })
+            console.log('jiijkjd',data)
             const rs = await HttpPost(`/order/createOrder`,data);
             if(rs.status == 200){
                 toast.success("Đơn hàng của bạn đã được phê duyệt");
@@ -81,7 +82,7 @@ function CheckOut() {
                     <div className={cx('row')}>
                         <div className={cx('form-left')}>
                             <div className={cx('checkout-content')}>
-                                <Link to="/CreatePro" className={cx('content-btn')}>
+                                <Link to='/createPro' state={profile} className={cx('content-btn')}>
                                     Click Here To update profile
                                 </Link>
                             </div>
@@ -148,7 +149,7 @@ function CheckOut() {
                                         <th>Price</th>
                                         <th>Total</th>
                                     </tr>
-                                    {productCheckOut ? productCheckOut.map((item,index)=>{
+                                    {productCheckOut ? productCheckOut?.map((item,index)=>{
                                         return(
                                             <tr key={index}>
                                                 <td>{item.productId.productName}</td>

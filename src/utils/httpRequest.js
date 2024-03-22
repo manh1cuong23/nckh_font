@@ -2,9 +2,11 @@ import axios from 'axios';
 const httpRequest = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
     headers: {
-        Authorization: `Bearer ${ sessionStorage.getItem('authToken')}`,
+      'Authorization': `Bearer ${sessionStorage.getItem("accesstoken")}`,
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
     },
-});
+  });
 
 export const get = async (path, options = {}) => {
     const response = await httpRequest.get(path, options);
@@ -13,6 +15,7 @@ export const get = async (path, options = {}) => {
 
 
 export const post = async (path, data) => {
+    console.log("check12dd",sessionStorage.getItem("accesstoken"))
     const response = await httpRequest.post(path, data);
     return response;
 };

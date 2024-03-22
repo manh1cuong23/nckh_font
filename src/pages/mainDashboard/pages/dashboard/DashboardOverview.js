@@ -5,51 +5,87 @@ import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTask
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
 import { CounterWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
-import {message as antdMessage} from 'antd'
+import {Table, message as antdMessage} from 'antd'
 import  DataCountManagerMember  from "../data/DataCountManagerMember";
 import DataCountManagerPosts from "../data/DataCountManagerPosts";
+import { HttpGet } from "~/pages/API/useAuth/auth.api";
 const DashboardOverview =  () => {
     const [informative, setInformative] = useState([])
     const [inforPosts, setInforPosts] = useState([])
     const [year, setYearPost] = useState(2023);
-    // const handleGetInformation = async () => {
-    //     try {
-    //         const { success, data} = await getMemberMangerCount();
-    //         if(success) {
-    //           setInformative([...data.informembers])
-    //         }
-    //     } catch (err) {
-    //         antdMessage.error(err);
-    //     }
-    // }
-   
+    const [dataSource,setDataSource] = useState([]);
+    const columns = [
+      {
+        title: 'ProductName',
+        dataIndex: 'productName',
+        key: 'productName',
+        render: (text) => <a>{text}</a>,
+      },
+      {
+        title: 'User',
+        dataIndex: 'fullName',
+        key: 'fullName',
+      },
+      
+      {
+        title: 'PhoneNumber',
+        dataIndex: 'phoneNumber',
+        key: 'phoneNumber',
+      },
+      {
+        title: 'Price',
+        dataIndex: 'price',
+        key: 'price',
+      },
+      {
+        title: 'Quantity',
+        dataIndex: 'quantity',
+        key: 'quantity',
+      },{
+        title: 'Total',
+        dataIndex: 'total',
+        key: 'total',
+        
+      },{
+        title: 'Ngày mua',
+        dataIndex: 'day',
+        key: 'day',
+        
+      },
+      {
+        title: 'Thanh toán',
+        dataIndex: 'isPay',
+        key: 'isPay',
+        
+      }
+    
+    ];
+   const callApi = async()=>{
+      const rs = await HttpGet('/order/getOrderById');
+      console.log('check rs',rs)
+      if(rs.status == 200){
+        const sourData = rs.data.data.map((item,index)=>{
+          const {_id,productId,userId,quantity,price} = item;
+          const fullName = userId.fullName;
+          const productName = productId.productName;
+          const phoneNumber = userId.phoneNumber;
+          const total = price * quantity
+          const dt = new Date(item.uploadAt);
+          const day = dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate() + "-" + dt.getHours() + "h" +dt.getMinutes() + "p";
+          const isPay = item?.ispay ? 'Rồi' : 'Chưa';
+          return {_id,quantity,price,productName,fullName,phoneNumber,total,day,isPay};
+        })
+        setDataSource(sourData);
+        console.log('checjk soure',sourData)
+      }
+   }
     useEffect(() => {
+      callApi()
     }, [])
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        {/* <Dropdown className="btn-toolbar">
-          <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faTasks} className="me-2" /> New Task
-            </Dropdown.Item>
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2" /> Upload Files
-            </Dropdown.Item>
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faUserShield} className="me-2" /> Preview Security
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item className="fw-bold">
-              <FontAwesomeIcon icon={faRocket} className="text-danger me-2" /> Upgrade to Pro
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown> */}
-
-        {/* <ButtonGroup>
-          <Button variant="outline-primary" size="sm">Share</Button>
-          <Button variant="outline-primary" size="sm">Export</Button>
-        </ButtonGroup> */}
+      
       </div>
 
       <Row className="justify-content-md-center">
@@ -93,17 +129,9 @@ const DashboardOverview =  () => {
         </Col>
       </Row>
       <Row>
-        <Col xs={6} xl={12} className="mb-4">
-          <Row>
-            <Col xs={12} className="mb-4">
-              <DataCountManagerMember data_member={informative} />
-            </Col>
-            <Col xs={12} className="mb-4">
-            <DataCountManagerPosts data_posts={inforPosts} />
-            </Col>
-        </Row>
-        </Col>
+      <Table dataSource={dataSource} columns={columns}  pagination={false} rowKey="_id"/>
       </Row>
+ 
     </>
   );
 };

@@ -8,7 +8,7 @@ import Crumb from '~/components/Crumb/Crumb';
 
 import img1 from '~/assets/imgs/product-1.jpg';
 import { TfiClose } from 'react-icons/tfi';
-import { HttpDelete, HttpGet, HttpPost } from '../API/useAuth/auth.api';
+import { HttpDelete, HttpGet, HttpPost } from '../API/useAuth/auth.api.js';
 import { toast } from 'react-toastify';
 
 const cx = classNames.bind(style);
@@ -25,7 +25,7 @@ function Cart({ className }) {
         if(product){
             product.forEach((item)=>{
                 console.log("itemhi",item)
-                totalSum +=item.productId.price * item.quantity;
+                totalSum += item.productId?.price ? item.productId.price * item.quantity: 0;
             })
             setTotal(totalSum);
         } 
@@ -111,12 +111,12 @@ function Cart({ className }) {
                                 console.log("sao may ko vao day",item.quantity)
                                 return(<tr  key={index}>
                                     <td className={cx('cart-pic')}>
-                                        <img src={item.productId.images[0].imgUrl} alt="" />
+                                        <img src={item.productId?.images[0].imgUrl} alt="" />
                                     </td>
                                     <td className={cx('cart-title')}>
-                                        <h5>{item.productId.productName}</h5>
+                                        <h5>{item.productId?.productName}</h5>
                                     </td>
-                                    <td className={cx('p-price')}>{item.productId.price}đ</td>
+                                    <td className={cx('p-price')}>{item.productId?.price}đ</td>
                                     <td className={cx('qua-col')}>
                                         <div className={cx('quantity')}>
                                             <div className={cx('pro-qty')}>
@@ -134,7 +134,7 @@ function Cart({ className }) {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className={cx('total-price')}>{item.quantity * item.productId.price}đ</td>
+                                    <td className={cx('total-price')}>{item.productId?.price ? item.quantity * item.productId?.price:""}đ</td>
                                     <td className={cx('close-td')} >
                                         <TfiClose className={cx('delete')} onClick={()=>HandleClickDelete(item._id)}/>
                                     </td>

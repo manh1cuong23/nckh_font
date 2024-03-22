@@ -3,81 +3,61 @@ import React, { useState } from 'react';
 import { Space, Table, Tag } from 'antd';
 
 import { Breadcrumb } from 'antd';
-import { HttpGet } from '~/pages/API/useAuth/auth.api';
+import { HttpDelete, HttpGet } from '~/pages/API/useAuth/auth.api';
 import { useEffect } from 'react';
 import { Pagination } from 'antd';
-
-const columns = [
-  {
-    title: 'ProductName',
-    dataIndex: 'productName',
-    key: 'productName',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Quanlity',
-    dataIndex: 'quanlity',
-    key: 'quanlity',
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-  },
-  {
-    title: 'Origin',
-    dataIndex: 'origin',
-    key: 'origin',
-  },
-  {
-    title: 'User_manual',
-    dataIndex: 'user_manual',
-    key: 'user_manual',
-  },
-//   {
-//     title: 'Tags',
-//     key: 'tags',
-//     dataIndex: 'tags',
-//     render: (_, { tags }) => (
-//       <>
-//         {tags.map((tag) => {
-//           let color = tag.length > 5 ? 'geekblue' : 'green';
-//           if (tag === 'loser') {
-//             color = 'volcano';
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           );
-//         })}
-//       </>
-//     ),
-//   },
-//   {
-//     title: 'Action',
-//     key: 'action',
-//     render: (_, record) => (
-//       <Space size="middle">
-//         <a>Invite {record.name}</a>
-//         <a>Delete</a>
-//       </Space>
-//     ),
-//   },
-];
-
-
-
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { toast } from 'react-toastify';
+ import ModleEditProduct from '~/pages/mainDashboard/components/ModleEditProduct/ModleEditProduct.js'
+ import ModleAddProduct from '~/pages/mainDashboard/components/ModleAddProduct/ModleAddProduct.js'
+import { Button, Modal } from 'antd';
+import { useForm } from 'react-hook-form';
+import style from './manaproduct.module.scss';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 function Manaproduct() {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPage, setTotalPage] = useState(1);
     const [totalItem, settotalItem] = useState(1);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
+    const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
+    const [deletePro,setDeletePro] = useState(false)
+    const [productSelect,setProductSelect] = useState()
+    const [productDelete,setProductDelete] = useState()
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const handleOkDelete = () => {
+      HandleDelete(productDelete)
+      setIsModalOpen(false);
 
+    };
+  
+    const handleCancelDelete = () => {
+      setIsModalOpen(false);
+    };
+    const handleOkEdit = () => {
+      setIsModalOpenEdit(false);
+    };
+  
+    const handleCancelEdit = () => {
+      setIsModalOpenEdit(false);
+    };
+    const handleOkAdd = () => {
+      setIsModalOpenAdd(false);
+    };
+  
+    const handleCancelAdd = () => {
+      setIsModalOpenAdd(false);
+    };
     const [product, setProducts] = useState([])
     const callApi = async () => {
-        const rs  = await HttpGet(`/product/get?pageSize=${pageSize}&pageIndex=${page}`);
+        const rs  = await HttpGet(`/product/productAdmin?pageSize=${pageSize}&pageIndex=${page}`);
         if (rs.status === 200) {
             setProducts(rs.data.products);
             setTotalPage(rs.data.totalPage)
@@ -94,6 +74,104 @@ function Manaproduct() {
     useEffect(() => {
         callApi()
     }, [page,pageSize]);
+    const handleClickDelet = (data)=>{
+      setIsModalOpen(true);
+      setProductDelete(data);
+    }
+    const HandleDelete =async (data)=>{
+      console.log('dleleel')
+        if(!data){
+          toast.error("no product item");
+          return;
+        }else{
+          const rs = await HttpDelete(`/product/delete?id=${data._id}`)
+          if(rs.status = 200){
+            toast.success("delete product success");
+            const newPro = product.filter((item)=>{
+              return item._id != data._id;
+            })
+            setProducts(newPro);
+          }
+        }
+     
+    
+
+    }
+
+    const HandleEdit = (data)=>{
+      console.log('day11',data)
+      
+      setProductSelect(data)
+      setIsModalOpenEdit(true)
+    
+    }
+    const handleEdit = (data)=>{
+      console.log('dayttyt',data)
+      setProducts(data);
+    }
+    const handleAddProduct = (data)=>{
+      console.log('vaoooo')
+      setIsModalOpenAdd(true)
+
+    }
+    const handleAdd = (data)=>{
+      console.log('adđ dataaa',data)
+      setProducts(data);
+    }
+    console.log('check pro',product);
+    const columns = [
+      {
+        title: 'ProductName',
+        dataIndex: 'productName',
+        key: 'productName',
+        render: (text) => <a>{text}</a>,
+      },
+      {
+        title: 'Quanlity',
+        dataIndex: 'quanlity',
+        key: 'quanlity',
+      },
+      {
+        title: 'Price',
+        dataIndex: 'price',
+        key: 'price',
+      },
+      {
+        title: 'Origin',
+        dataIndex: 'origin',
+        key: 'origin',
+      },
+      {
+        title: 'description',
+        dataIndex: 'description',
+        key: 'description',
+      },{
+        title: 'imgae',
+        dataIndex: 'imgae',
+        key: 'imgae',
+        render: (_, record) => (
+          <img className={cx('img')}  src={record.images[0]?.imgUrl}/>
+        ),
+      },
+    
+    
+      {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+          <Space size="middle">
+            <a  onClick={()=>HandleEdit(record)}>
+            <EditIcon/>
+            </a>
+            <a  onClick={()=>handleClickDelet(record)}>
+            <DeleteIcon />
+            </a>
+          </Space>
+        ),
+      },
+    ];
+    
+    
 
     return (
         <div>
@@ -107,7 +185,11 @@ function Manaproduct() {
                     },
                     ]}
                 />
-            <Table columns={columns} dataSource={product} pagination={false}/>
+                <div onClick={handleAddProduct}  className={cx('addWrap')} >
+                  <AddCircleIcon   className={cx('addPro')}/>
+                    <h4>Thêm sản phẩm mới</h4>
+                </div>
+            <Table columns={columns} dataSource={product} pagination={false} rowKey="_id"/>
             <Pagination  total={totalItem}
                           defaultCurrent={page}
                           onChange={handPagination}
@@ -118,7 +200,17 @@ function Manaproduct() {
                           textAlign: 'center'
               }}
             />
+            <Modal title="Are you sure to delete this product" open={isModalOpen} onOk={handleOkDelete} onCancel={handleCancelDelete}>
+        
+      </Modal>
+      <Modal width={700} title="Update product" open={isModalOpenEdit} onOk={handleOkEdit} onCancel={handleCancelEdit}>
+         <ModleEditProduct data={productSelect} productAll={product} handleEdit={handleEdit}/>
+      </Modal>
+      <Modal width={700} title="Update product" open={isModalOpenAdd} onOk={handleOkAdd} onCancel={handleCancelAdd}>
+         <ModleAddProduct   productAll={product} handleAdd={handleAdd}/>
+      </Modal>
         </div>
+        
     )  
 }
 export default Manaproduct;

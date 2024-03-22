@@ -45,15 +45,15 @@ const RouteWithLoader = ({ component: Component, ...rest }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const localStorageIsSettingsVisible = () => {
-    return localStorage.getItem('settingsVisible') === 'false' ? false : true
+  const sessionStorageIsSettingsVisible = () => {
+    return sessionStorage.getItem('settingsVisible') === 'false' ? false : true
   }
 
-  const [showSettings, setShowSettings] = useState(localStorageIsSettingsVisible);
+  const [showSettings, setShowSettings] = useState(sessionStorageIsSettingsVisible);
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
-    localStorage.setItem('settingsVisible', !showSettings);
+    sessionStorage.setItem('settingsVisible', !showSettings);
   }
 
   return (
