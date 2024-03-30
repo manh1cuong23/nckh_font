@@ -15,8 +15,6 @@ function CheckOut() {
     // const location = useLocation();
     // const inputValue = location.state.productQuantity;
 
-    // console.log(location);
-    // console.log(inputValue);
 
     const {
         register,
@@ -27,7 +25,8 @@ function CheckOut() {
 
     const param = useParams();
   
-    const [productCheckOut, setProductCheckOut] = useState([]);
+    const [productCheckOut, setProductCheckOut] = useState(null);
+    const [productDetail, setProductDetail] = useState(null);
     const [profile,setProfile] = useState({})
     const [total,setTotal] = useState(0)
     // const [cartCheckOut, setCartCheckOut] = useState([]);
@@ -41,11 +40,14 @@ function CheckOut() {
     };
 
     let { state } = useLocation();
-    console.log("check state",state);
  
     useEffect(() => {
-        
-        setProductCheckOut(state);
+        if(state?.cartProduct){
+            setProductCheckOut(state.cartProduct);
+        }
+        if(state?.detail){
+            setProductDetail([state.detail])
+        }
         callApi();
     }, []);
     useEffect(()=>{
@@ -53,17 +55,37 @@ function CheckOut() {
         if(productCheckOut){
             productCheckOut.forEach((item)=>{
                 console.log("itemhi",item)
-                totalSum +=item.productId.price * item.quantity;
+                totalSum +=item.productId?.price * item?.quantity;
             })
+            if(!totalSum){
+                totalSum = 0;
+            }
             setTotal(totalSum);
-        } 
-    },[productCheckOut])
+        } else if(productDetail){
+            productDetail?.forEach((item)=>{
+                console.log("itemhi",item)
+                totalSum +=item.price * item.quanlity;
+            })
+            if(!totalSum){
+                totalSum = 0;
+            }
+            setTotal(totalSum);
+        }
+    },[productCheckOut,productDetail])
     const handleProcess = async()=>{
         if(productCheckOut){
-            let data = productCheckOut.map((item)=>{
+            let data = productCheckOut?.map((item)=>{
                 return {userId:item.userId,productId:item.productId._id,quantity:item.quantity,price:item.productId.price,idAdmin:item.productId.userId}
             })
-            console.log('jiijkjd',data)
+            const rs = await HttpPost(`/order/createOrder`,data);
+            if(rs.status == 200){
+                toast.success("Đơn hàng của bạn đã được phê duyệt");
+            }else{
+                toast.error("Something wrong");
+            }
+        }else if(productDetail){
+            let data = [{userId:profile?._id,productId:productDetail[0]._id,quantity:productDetail[0].quanlity,price:productDetail[0].price,idAdmin:productDetail[0].userId}]
+            console.log('datacv',data)
             const rs = await HttpPost(`/order/createOrder`,data);
             if(rs.status == 200){
                 toast.success("Đơn hàng của bạn đã được phê duyệt");
@@ -72,8 +94,10 @@ function CheckOut() {
             }
         }
 
-        console.log("check test",test)
     }
+    console.log('check e',productDetail)
+    console.log('check b',productCheckOut)
+    console.log('check p',profile)
     return (
         <div className={cx('wrapper')}>
             <Crumb title="Check Out" />
@@ -150,15 +174,24 @@ function CheckOut() {
                                         <th>Total</th>
                                     </tr>
                                     {productCheckOut ? productCheckOut?.map((item,index)=>{
+                                        console.log('checkpro',item);
                                         return(
                                             <tr key={index}>
-                                                <td>{item.productId.productName}</td>
-                                                <td>{item.quantity}</td>
-                                                <td>{item.productId.price}</td>
-                                                <td>{item.productId.price * item.quantity}</td>`
+                                                <td>{item.productId?.productName}</td>
+                                                <td>{item?.quantity}</td>
+                                                <td>{item?.productId?.price}</td>
+                                                <td>{ item.productId?.price ? item.productId?.price * item?.quantity: 0}</td>`
                                         </tr>
                                         )
-                                    }):""}
+                                    }): productDetail?.map((item,index)=>{
+                                       return  <tr >
+                                            <td>{item.productName}</td>
+                                            <td>{item?.quanlity}</td>
+                                            <td>{item?.price}</td>
+                                            <td>{ item?.price ? item?.quanlity *  item?.price: 0}</td>`
+                                        </tr>
+                                    })
+                                   }
                                     </table>
                                       
                                 </ul>

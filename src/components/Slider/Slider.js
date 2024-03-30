@@ -20,7 +20,6 @@ function Slider() {
         <>
             <Swiper className={cx('mySwiper')} pagination={true} navigation={true} autoplay={{delay: 5000, disableOnInteraction: true,}} modules={[Pagination, Navigation, Autoplay]}>
                 {imgs.map((item,index)=>{
-                    console.log("item",item)
                     return (<SwiperSlide key={index}> 
                         {' '}
                         <div className={cx('slide-1')}>

@@ -12,9 +12,12 @@ import { useNavigate } from 'react-router-dom';
 import Crumb from '../../components/Crumb/Crumb';
 
 import { HttpPost } from '../API/useAuth/auth.api';
+import useAuthStore from '~/hooks/useAuthStore';
 const cx = classNames.bind(style);
 
 function Login() {
+    const setUser = useAuthStore((state) => state.setUser);
+
     const {
         register,
         handleSubmit,
@@ -29,10 +32,10 @@ function Login() {
             const res = await HttpPost('/auth/sign-in', data);
             if(res.data.statuscode === 200) {
                 const token = res.data.data.accesstoken;
-                sessionStorage.setItem("accesstoken", token)
-                
+               await  sessionStorage.setItem("accesstoken", token)
                 const check = sessionStorage.getItem("accesstoken")
-                console.log("cjheclk",check)
+                setUser(res.data)
+                console.log("cjheclk",res.data)
                 toast.success(res.data.message)
                 if(res.data.data.roleName === "Admin") {
                     navigate('/dashboard')

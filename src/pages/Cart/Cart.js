@@ -171,7 +171,7 @@ function Cart({ className }) {
                                     Total <span>{total} vnd</span>
                                 </li>
                             </ul>
-                            <Link to="/checkout" className={cx('proceed-btn')} state={product}>
+                            <Link to="/checkout" className={cx('proceed-btn')} state={{cartProduct:product}}>
                                 PROCEED TO CHECK OUT
                             </Link>
                         </div>

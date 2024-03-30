@@ -2,9 +2,7 @@ import axios from 'axios';
 const httpRequest = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
     headers: {
-      'Authorization': `Bearer ${sessionStorage.getItem("accesstoken")}`,
-      'Cache-Control': 'no-cache',
-      'Pragma': 'no-cache',
+      Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
     },
   });
 

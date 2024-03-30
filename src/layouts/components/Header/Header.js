@@ -9,7 +9,10 @@ import { FaTiktok, FaUser } from 'react-icons/fa';
 import { IoShareSocialOutline } from 'react-icons/io5';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import style from './Header.module.scss';
 import Search from '~/components/Search/Search';
 import img1 from '~/assets/imgs/women-4.jpg';
@@ -20,14 +23,22 @@ import { HttpGet } from '~/pages/API/useAuth/auth.api';
 const cx = classNames.bind(style);
 
 function Header() {
-    const user = useAuthStore((state) => state.user);
+    const [user,setUser] = useState()
+    const user1 = useAuthStore((state) => state?.user?.data);
+    useEffect(()=>{
+        setUser(user1)
+
+    },[])
     const [cartCount,setCartCount] = useState(0)
     console.log('user',user)
     const callApi=async ()=>{
         const rs = await HttpGet('/cart/getCount');
         console.log('rsvãc',rs)
-        if(rs){
-        setCartCount(rs.data)
+        if(rs.status == 200){
+        setCartCount(rs?.data)
+        }else{
+        setCartCount(0)
+
         }
     }
     useEffect(()=>{
@@ -75,11 +86,30 @@ function Header() {
                        
                         <div className={cx('login')}>
                             <FaUser />
-                            {user? <span>
+                            {!user? <span>
                                 <Link to="/login">Login</Link>
                             </span>:
                             <span>
-                            <Link onClick={handleLogout} to="/login">logout</Link>
+                                <div>
+                                <PopupState variant="popover" popupId="demo-popup-menu">
+                                    {(popupState) => (
+                                        <React.Fragment>
+                                        <div style={{fontSize:'16px',color:'red',padding:'4px 6px'}} variant="contained" {...bindTrigger(popupState)}>
+                                        {user?.username}
+                                        </div>
+                                        <Menu {...bindMenu(popupState)}>
+                                            <MenuItem onClick={popupState.close}>Profile</MenuItem>
+                                            <MenuItem onClick={popupState.close}>My account</MenuItem>
+                                            <MenuItem onClick={popupState.close}>
+                                            <Link onClick={handleLogout} to="/login">logOut</Link>
+                                            </MenuItem>
+                                        </Menu>
+                                        </React.Fragment>
+                                    )}
+                                    </PopupState>
+                                {/* <div>{user?.username}</div> */}
+                                    {/* <Link onClick={handleLogout} to="/login">{user?.username}</Link> */}
+                                </div>
                         </span>
                             }
                             

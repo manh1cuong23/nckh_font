@@ -21,7 +21,7 @@ const useAuthStore = create(
             },
             fetchUser: async () => {
                 console.log('da vao fetch user')
-                if (!sessionStorage.getItem('authToken')) {
+                if (!sessionStorage.getItem('accesstoken')) {
                     set((state) => {
                         state.isFetchedUser = true;
                         
@@ -36,13 +36,15 @@ const useAuthStore = create(
                 try {
                     const response =  await HttpGet(`/auth/me`);
                     
+                    console.log('chek usse iio auth',response)
                     set((state) => {
                         state.user = response;
-                        console.log('chek usse iio auth',response)
                     });
                 } catch (e) {
+                    console.log('loi roi',e)
                     sessionStorage.removeItem('authToken');
                 } finally {
+                    console.log('chac chan vao dayu')
                     set((state) => {
                         state.isLoading = false;
                         state.isFetchedUser = true;

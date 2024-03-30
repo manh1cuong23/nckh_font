@@ -1,6 +1,6 @@
 import '~/App.css';
 import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes, privateRoutes } from '~/routes/routes';
 import { Fragment, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,35 +10,31 @@ import LoadingSpinner from './layouts/components/LoadingSpinner/LoadingSpinner';
 import ScrollToTop from './hooks/scrollToTop';
 import DeFaultLayoutAdmin from './pages/DeFaultLayoutAdmin/DeFaultLayoutAdmin';
 import useAuthStore from './hooks/useAuthStore';
-import AuthComposition from './pages/AuthComposion/AuthComposion';
+import AuthComposition from './pages/AuthComposion/AuthComposion.jsx';
 import Defautlt from './pages/Defautlt/Defautlt';
 import axios from 'axios';
 function App() {
-    const [isLoading, setIsLoading] = useState(true);
+    // const [isLoading, setIsLoading] = useState(true);
     const { fetchUser, isFetchedUser } = useAuthStore((state) => state);
-    const axiosInstance= axios.create();
+   console.log('check sesion',sessionStorage.getItem('accesstoken'))
 
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setIsLoading(false);
+    //     }, 1000);
+    // }, [isLoading]);
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
-    }, [isLoading]);
-    useEffect(() => {
+   console.log('check sesion2q',sessionStorage.getItem('accesstoken'))
        
-        // fetchUser()
+        fetchUser()
     }, []);
     console.log('is Fet',isFetchedUser)
-    window.addEventListener('storage',()=>{
-        let token =  sessionStorage.getItem("accesstoken")
-        if (token) {
-            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          } else {
-            delete axiosInstance.defaults.headers.common['Authorization'];
-          }
-    })
+    const user = useAuthStore((state) => state.user);
+    console.log('check user iun app',user)
+    
     return (
        <>
-            {true && (
+            {isFetchedUser && (
                 <Router>
                 <ToastContainer autoClose={4000}  position="bottom-right" />
                 <div className="App">
@@ -48,14 +44,9 @@ function App() {
                     ) : ( */}
                     <Routes>
                         {publicRoutes.map((route, index) => {
-                                const needAuth = route.private ? true : false;
-                                console.log('check',route.privte)
-                                if (route.private) {
-                                    console.log('da vao daty');
-                                    console.log('itemdfvoath', route.path);
-                                    // console.log('dj',AuthComposition(route.component))
-                                }
-                                
+                                const needAuth = route.private;
+
+                               
                             const Page = route.component ;
                             let Layout = DefaultLayout;
 
@@ -64,36 +55,30 @@ function App() {
                             } else if (route.layout === null) {
                                 Layout = Fragment;
                             }
-                            // if(needAuth){
-                            //     return (
-                            //         <Route
-                            //         key={index}
-                            //         path={route.path}
-                            //         element={
-                            //             <Layout>
-                            //                 <AuthComposition>
-                            //                     <Page />
-                            //                 </AuthComposition>
-                            //               </Layout>
-                            //         }
-                            //     />
-                            //     )
-                            // }
-                         
-
+                            if(needAuth && !Boolean(user) ){
+                                return      <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Navigate to={'/login'} />
+                                }
+                            />
+                            }
                             return (
                                 <Route
                                     key={index}
                                     path={route.path}
                                     element={
-                                        <Layout>
-                                            <Page />
-                                        </Layout>
+                                        <>
+                                            <Layout>
+                                                <Page />
+                                            </Layout>
+                                        </>
                                     }
                                 />
                             );
                         })}
-                        {privateRoutes.map((route,index) => {
+                        {/* {privateRoutes.map((route,index) => {
                             const Page = route.component;
 
                             let Layout = DeFaultLayoutAdmin;
@@ -104,6 +89,7 @@ function App() {
                                 Layout = Fragment;
                             }
 
+                           
                             return (
                                 <Route
                                     key={index}
@@ -115,7 +101,7 @@ function App() {
                                     }
                                 />
                             );
-                        })}
+                        })} */}
                     </Routes>
                     {/* )} */}
                 </div>

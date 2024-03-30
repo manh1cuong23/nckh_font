@@ -119,8 +119,8 @@ const DashboardOverview =  () => {
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Revenue"
-            title="$43,594"
+            category="Product sell"
+            title="12"
             period="Feb 1 - Apr 1"
             percentage={28.4}
             icon={faCashRegister}

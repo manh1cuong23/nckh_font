@@ -23,22 +23,6 @@ function Product1(props) {
 
     const [productTag, setProductTag] = useState([]);
 
-    const callApi = async () => {
-        const response = await axios({
-            method: 'get',
-            url: `https://6556cd15bd4bcef8b611a0fc.mockapi.io/api/clothes/clothes`,
-            type: 'json',
-        });
-
-        if (response.status === 200) {
-            setProductTag(response.data.filter((p) => p.person.includes('Women')));
-        }
-    };
-
-    useEffect(() => {
-        callApi();
-    }, []);
-
     return (
         <div className={cx('wrapper')}>
             <div className={cx('product')}>
