@@ -15,7 +15,9 @@ import { Button, Modal } from 'antd';
 import { useForm } from 'react-hook-form';
 import style from './manaproduct.module.scss';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import classNames from 'classnames/bind';
+import axios from 'axios';
 const cx = classNames.bind(style);
 function Manaproduct() {
     const [page, setPage] = useState(1);
@@ -118,7 +120,27 @@ function Manaproduct() {
       console.log('adđ dataaa',data)
       setProducts(data);
     }
-    console.log('check pro',product);
+    const handleExportProduct = async()=>{
+      axios({
+        url: 'http://localhost:8081/api/v1/product/export-excel',
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        responseType: 'blob', // Định dạng phản hồi là blob
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Products.xlsx'; // Tên file khi tải về
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }).catch(error => {
+        console.error('Axios error:', error);
+      });
+
+    }
     const columns = [
       {
         title: 'ProductName',
@@ -185,9 +207,15 @@ function Manaproduct() {
                     },
                     ]}
                 />
-                <div onClick={handleAddProduct}  className={cx('addWrap')} >
-                  <AddCircleIcon   className={cx('addPro')}/>
-                    <h4>Thêm sản phẩm mới</h4>
+                <div className={cx("wrap_button")}>
+                  <div onClick={handleAddProduct}  className={cx('addWrap')} >
+                    <AddCircleIcon   className={cx('addPro')}/>
+                      <h4>Thêm sản phẩm mới</h4>
+                  </div>
+                  <div onClick={handleExportProduct}  className={cx('k')} >
+                    <SystemUpdateAltIcon   className={cx('addPro')}/>
+                      <h4>Xuất tệp excel</h4>
+                  </div>
                 </div>
             <Table columns={columns} dataSource={product} pagination={false} rowKey="_id"/>
             <Pagination  total={totalItem}
@@ -206,7 +234,7 @@ function Manaproduct() {
       <Modal width={700} title="Update product" open={isModalOpenEdit} onOk={handleOkEdit} onCancel={handleCancelEdit}>
          <ModleEditProduct data={productSelect} productAll={product} handleEdit={handleEdit}/>
       </Modal>
-      <Modal width={700} title="Update product" open={isModalOpenAdd} onOk={handleOkAdd} onCancel={handleCancelAdd}>
+      <Modal width={700} title="Add product" open={isModalOpenAdd} onOk={handleOkAdd} onCancel={handleCancelAdd}>
          <ModleAddProduct   productAll={product} handleAdd={handleAdd}/>
       </Modal>
         </div>

@@ -8,7 +8,9 @@ import { PageVisitsTable } from "../../components/Tables";
 import {Table, message as antdMessage} from 'antd'
 import  DataCountManagerMember  from "../data/DataCountManagerMember";
 import DataCountManagerPosts from "../data/DataCountManagerPosts";
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import { HttpGet } from "~/pages/API/useAuth/auth.api";
+import axios from "axios";
 const DashboardOverview =  () => {
     const [informative, setInformative] = useState([])
     const [inforPosts, setInforPosts] = useState([])
@@ -72,16 +74,38 @@ const DashboardOverview =  () => {
           const total = price * quantity
           const dt = new Date(item.uploadAt);
           const day = dt.getFullYear() + "/" + (dt.getMonth() + 1) + "/" + dt.getDate() + "-" + dt.getHours() + "h" +dt.getMinutes() + "p";
-          const isPay = item?.ispay ? 'Rồi' : 'Chưa';
+          const isPay = item?.isPay ? 'Rồi' : 'Chưa';
           return {_id,quantity,price,productName,fullName,phoneNumber,total,day,isPay};
         })
+    console.log('checjk soure11',sourData)
+
         setDataSource(sourData);
-        console.log('checjk soure',sourData)
       }
-   }
+    }
+    console.log('checjk soure',dataSource)
     useEffect(() => {
       callApi()
     }, [])
+    const handleExportProduct = ()=>{
+      axios({
+        url: 'http://localhost:8081/api/v1/order/export_excel',
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("accesstoken")}`,
+        },
+        responseType: 'blob', // Định dạng phản hồi là blob
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Orders.xlsx'; // Tên file khi tải về
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }).catch(error => {
+        console.error('Axios error:', error);
+      });
+    }
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -130,6 +154,10 @@ const DashboardOverview =  () => {
       </Row>
       <Row>
       <Table dataSource={dataSource} columns={columns}  pagination={false} rowKey="_id"/>
+      <div onClick={handleExportProduct}  style={{display:"flex",alignItems:"center", width:"200px",cursor:"pointer", border: "1px solid #ccc",padding:"8px 12px"}}>
+                    <SystemUpdateAltIcon   />
+                      <h4 style={{marginLeft:"6px"}}>Xuất tệp excel</h4>
+                  </div>
       </Row>
  
     </>

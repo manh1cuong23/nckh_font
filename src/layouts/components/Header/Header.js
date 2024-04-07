@@ -98,8 +98,12 @@ function Header() {
                                         {user?.username}
                                         </div>
                                         <Menu {...bindMenu(popupState)}>
-                                            <MenuItem onClick={popupState.close}>Profile</MenuItem>
-                                            <MenuItem onClick={popupState.close}>My account</MenuItem>
+                                            <Link to="/createPro">
+                                                <MenuItem onClick={popupState.close}>Profile</MenuItem>
+                                            </Link>
+                                        <Link to="/my-order">
+                                            <MenuItem onClick={popupState.close}>My order</MenuItem>
+                                        </Link>
                                             <MenuItem onClick={popupState.close}>
                                             <Link onClick={handleLogout} to="/login">logOut</Link>
                                             </MenuItem>

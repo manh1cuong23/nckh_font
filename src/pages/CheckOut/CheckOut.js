@@ -74,17 +74,18 @@ function CheckOut() {
     },[productCheckOut,productDetail])
     const handleProcess = async()=>{
         if(productCheckOut){
+            console.log("check th vao day chua ")
             let data = productCheckOut?.map((item)=>{
-                return {userId:item.userId,productId:item.productId._id,quantity:item.quantity,price:item.productId.price,idAdmin:item.productId.userId}
+                return {userId:item.userId,productId:item.productId._id,quantity:item.quantity,price:item.productId.price,idAdmin:item.productId.userId,imgUrl:item.productId.images[0].imgUrl}
             })
             const rs = await HttpPost(`/order/createOrder`,data);
             if(rs.status == 200){
-                toast.success("Đơn hàng của bạn đã được phê duyệt");
+                toast.success("Đơn hàng của bạn đã được phê duyệt sẽ sớm được giao");
             }else{
                 toast.error("Something wrong");
             }
         }else if(productDetail){
-            let data = [{userId:profile?._id,productId:productDetail[0]._id,quantity:productDetail[0].quanlity,price:productDetail[0].price,idAdmin:productDetail[0].userId}]
+            let data = [{userId:profile?._id,productId:productDetail[0]._id,quantity:productDetail[0].quanlity,price:productDetail[0].price,idAdmin:productDetail[0].userId,imgUrl:productDetail[0].productId.images[0].imgUrl}]
             console.log('datacv',data)
             const rs = await HttpPost(`/order/createOrder`,data);
             if(rs.status == 200){
@@ -95,9 +96,6 @@ function CheckOut() {
         }
 
     }
-    console.log('check e',productDetail)
-    console.log('check b',productCheckOut)
-    console.log('check p',profile)
     return (
         <div className={cx('wrapper')}>
             <Crumb title="Check Out" />

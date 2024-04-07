@@ -78,7 +78,7 @@ function App() {
                                 />
                             );
                         })}
-                        {/* {privateRoutes.map((route,index) => {
+                        {privateRoutes.map((route,index) => {
                             const Page = route.component;
 
                             let Layout = DeFaultLayoutAdmin;
@@ -101,7 +101,7 @@ function App() {
                                     }
                                 />
                             );
-                        })} */}
+                        })}
                     </Routes>
                     {/* )} */}
                 </div>

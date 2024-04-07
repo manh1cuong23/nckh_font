@@ -20,3 +20,22 @@
     }
    
 }
+.wrap_button{
+    display: flex;
+    align-items: center;
+}
+.k{
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding:6px 8px;
+    width: 200px;
+    font-size: 16px;
+    margin: 6px 0;
+    background-color: #ccc;
+    cursor: pointer;
+    &:hover{
+        background-color: rgb(240, 134, 134);
+    }
+    margin-left: 10px;
+}

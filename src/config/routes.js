@@ -1,3 +1,4 @@
+
 const routes = {
     home: '/',
     shop: '/shop',
@@ -15,6 +16,7 @@ const routes = {
     favourite: '/favourite',
     ForgetPass: '/ForgetPass',
     CreatePro:'/CreatePro',
+    MyOrder:'/my-order',
 
 
     //admin

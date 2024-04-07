@@ -18,6 +18,7 @@ import mainDashboard from '~/pages/mainDashboard/mainDashboard';
 import DashboardOverview from '~/pages/mainDashboard/pages/dashboard/DashboardOverview';
 import Manaproduct from '~/pages/mainDashboard/pages/Manaproduct/Manaproduct';
 import CreatePro from '~/pages/CreateProfile/CreatePro';
+import MyOrder from '~/pages/MyOrder/MyOrder';
 const publicRoutes = [
     { path: config.routes.home, component: Home },
     { path: config.routes.shop, component: Shop },
@@ -34,6 +35,7 @@ const publicRoutes = [
     { path: config.routes.favourite, component: Favourite,private:true },
     { path: config.routes.ForgetPass, component: ForgetPass },
     { path: config.routes.CreatePro, component: CreatePro },
+    { path: config.routes.MyOrder, component: MyOrder },
 ];
 
 const privateRoutes = [
