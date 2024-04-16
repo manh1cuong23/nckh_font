@@ -18,17 +18,24 @@ import { HttpGet, HttpPost } from '../API/useAuth/auth.api.js';
 import PurePanel from 'antd/es/tooltip/PurePanel';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-
+import io from "socket.io-client";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import SendIcon from '@mui/icons-material/Send';
+// import { socket } from '~/soket';
+import avatar from '~/assets/imgs/avatar_default.jpg'
+import Comment from '~/components/CommentProductdetail/Comment';
 const cx = classNames.bind(style);
-
 function ProductDetail() {
     // Lay API san pham chi tiet
+    const sendMessage = () => {
+        socket.emit("send_message", { d:"jjijiji"});
+      };
     const param = useParams();
     const [productDetail, setProductDetail] = useState({});
     const [product, setProduct] = useState([]);
+    const [socket,setSocket] = useState(null)
     const check = sessionStorage.getItem("accesstoken")
-
-    console.log("cjheclk",check)
+   
     const callApi = async () => {
         
         const rs = await HttpGet(`/product/detail?id=${param.id}`)
@@ -36,9 +43,6 @@ function ProductDetail() {
         if (rs.status === 200) {
             setProductDetail(rs.data);
             setProduct(rs.data);
-
-
-            
         }
     };
 
@@ -55,6 +59,7 @@ function ProductDetail() {
         setProductQuantity(e.target.value);
     };
     const handleIncrease = useCallback(() => {
+        // sendMessage()
         setProductQuantity(productQuantity + 1);
       }, [productQuantity]);
    
@@ -74,6 +79,7 @@ function ProductDetail() {
         }
        
     }
+    console.log("check detal",productDetail)
     const handleReduce = useCallback(() => {
         if (productQuantity === 1) {
             setProductQuantity(1);
@@ -135,8 +141,9 @@ function ProductDetail() {
                                 <div className={cx('product-sold')}>
                                     <span>{productDetail.views}</span>
                                     <span>
-                                        Sold
-                                        <AiOutlineQuestionCircle />
+                                        Sold:
+                                        
+                                        <span className={cx('sold')}>{productDetail.solid}</span>
                                     </span>
                                 </div>
                             </div>
@@ -187,7 +194,7 @@ function ProductDetail() {
                                     <span>Add To Cart</span>
                                 </div>
                                 <div className={cx('buy')}>
-                                    <Link to={`/checkOut/${productDetail.id}`} state={{detail:productDetail}}>Buy Now</Link>
+                                    <Link to={`/checkOut/${productDetail.id}`} state={{detail:productDetail,quantity:productQuantity}}>Buy Now</Link>
                                 </div>
                             </div>
                             <div className={cx('faq')}>
@@ -261,34 +268,8 @@ function ProductDetail() {
                     <div className={cx('appraise')}></div>
                     <div className={cx('more')}>
                         <h4>From The Same Brand</h4>
-                        {/* <div className={cx('product-mores')}>
-                            {product
-                                .filter((d) => d.type === productDetail.type)
-                                .slice(0, 4)
-                                .map((i) => (
-                                    <Link to={`/productDetail/${i.id}`} className={cx('product-more')} key={i.id}>
-                                        <div className={cx('img')}>
-                                            <img src={img1} alt="product" />
-                                        </div>
-                                        <div className={cx('content')}>
-                                            <span className={cx('content-name')}>{i.name}</span>
-                                            <div className={cx('content-price')}>
-                                                <span className={cx('price-sale--more')}>
-                                                    {parseFloat(i.sale) === 0
-                                                        ? parseFloat(i.price)
-                                                        : (parseFloat(i.price) * parseFloat(i.sale)) / 100}
-                                                    {'đ'}
-                                                </span>
-                                                <span className={cx('price-more')}>{parseFloat(i.price)}đ</span>
-                                            </div>
-                                        </div>
-                                        {i.sale && i.sale !== '0' && i.sale !== 'null' && (
-                                            <div className={cx('product-sale')}>SALE</div>
-                                        )}
-                                    </Link>
-                                ))}
-                        </div> */}
                     </div>
+                  <Comment id={productDetail._id}/>
                 </div>
             )}
         </div>

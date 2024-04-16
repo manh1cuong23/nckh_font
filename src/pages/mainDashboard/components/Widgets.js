@@ -85,12 +85,12 @@ export const CounterWidget = (props) => {
               <h5>{category}</h5>
               <h3 className="mb-1">{title}</h3>
             </div>
-            <small>{period}, <FontAwesomeIcon icon={faGlobeEurope} size="xs" /> WorldWide</small>
+            <small>{period}</small>
             <div className="small mt-2">
-              <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
+              {/* <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
               <span className={`${percentageColor} fw-bold`}>
                 {percentage}%
-              </span> Since last month
+              </span> Since last month */}
             </div>
           </Col>
         </Row>
@@ -314,12 +314,11 @@ export const SalesValueWidget = (props) => {
           <h5 className="fw-normal mb-2">
             {title}
           </h5>
-          <h3>${value}</h3>
+          <h3>SUM:{value} vnd</h3>
           <small className="fw-bold mt-2">
-            <span className="me-2">Yesterday</span>
-            <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
+            <span className="me-2">Money received</span>
             <span className={percentageColor}>
-              {percentage}%
+              {percentage} vnd
             </span>
           </small>
         </div>

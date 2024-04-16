@@ -13,6 +13,7 @@ import useAuthStore from './hooks/useAuthStore';
 import AuthComposition from './pages/AuthComposion/AuthComposion.jsx';
 import Defautlt from './pages/Defautlt/Defautlt';
 import axios from 'axios';
+
 function App() {
     // const [isLoading, setIsLoading] = useState(true);
     const { fetchUser, isFetchedUser } = useAuthStore((state) => state);

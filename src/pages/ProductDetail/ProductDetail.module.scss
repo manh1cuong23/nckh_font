@@ -1,3 +1,4 @@
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -492,4 +493,8 @@
 
 .detail-info {
     line-height: 1.5rem;
+}
+.sold{
+    color: red !important;;
+    margin: 0 6px;
 }

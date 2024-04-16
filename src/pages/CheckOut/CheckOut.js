@@ -46,7 +46,8 @@ function CheckOut() {
             setProductCheckOut(state.cartProduct);
         }
         if(state?.detail){
-            setProductDetail([state.detail])
+            state.detail.quanlity = state.quantity;
+            setProductDetail([state.detail]);
         }
         callApi();
     }, []);
@@ -85,7 +86,7 @@ function CheckOut() {
                 toast.error("Something wrong");
             }
         }else if(productDetail){
-            let data = [{userId:profile?._id,productId:productDetail[0]._id,quantity:productDetail[0].quanlity,price:productDetail[0].price,idAdmin:productDetail[0].userId,imgUrl:productDetail[0].productId.images[0].imgUrl}]
+            let data = [{userId:profile?._id,productId:productDetail[0]._id,quantity:productDetail[0].quanlity,price:productDetail[0].price,idAdmin:productDetail[0].userId,imgUrl:productDetail[0].images[0].imgUrl}]
             console.log('datacv',data)
             const rs = await HttpPost(`/order/createOrder`,data);
             if(rs.status == 200){
@@ -96,6 +97,7 @@ function CheckOut() {
         }
 
     }
+    console.log("check detal",productDetail)
     return (
         <div className={cx('wrapper')}>
             <Crumb title="Check Out" />

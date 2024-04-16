@@ -210,11 +210,11 @@ function Manaproduct() {
                 <div className={cx("wrap_button")}>
                   <div onClick={handleAddProduct}  className={cx('addWrap')} >
                     <AddCircleIcon   className={cx('addPro')}/>
-                      <h4>Thêm sản phẩm mới</h4>
+                      <h4>Add new products</h4>
                   </div>
                   <div onClick={handleExportProduct}  className={cx('k')} >
                     <SystemUpdateAltIcon   className={cx('addPro')}/>
-                      <h4>Xuất tệp excel</h4>
+                      <h4>Export excel file</h4>
                   </div>
                 </div>
             <Table columns={columns} dataSource={product} pagination={false} rowKey="_id"/>
